@@ -79,7 +79,6 @@ EXPOSE 8888
 ENV JUPYTER_ENABLE_LAB=1
 ENTRYPOINT ["tini", "-g", "--"]
 CMD ["start-notebook.sh"]
-ARG DATE=1053243
 
 COPY --from=0 /usr/local/bin/start.sh /usr/local/bin/start.sh
 COPY --from=0 /usr/local/bin/start-notebook.sh /usr/local/bin/start-notebook.sh
