@@ -65,6 +65,9 @@ RUN conda install --quiet -y -c conda-forge \
     conda clean --all -f -y && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
+RUN wget -q "https://github.com/sharkdp/vivid/releases/download/v0.6.0/vivid_0.6.0_amd64.deb" && \
+    dpkg -i vivid_0.6.0_amd64.deb && \
+    rm -f vivid_0.6.0_amd64.deb
 USER $NB_UID
 RUN pip list --format=freeze | grep tensorboard | xargs pip uninstall -yq && \
     pip install -Uq --no-cache-dir \
