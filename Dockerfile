@@ -10,7 +10,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get -qq update && apt-get -qq dist-upgrade && \
     apt-get -qq install --no-install-recommends \
         wget bzip2 ca-certificates sudo locales fonts-liberation run-one \
-        nvtop htop openssh-server net-tools ffmpeg libsm6 libxext6 zsh nvim && \
+        nvtop htop openssh-server net-tools ffmpeg libsm6 libxext6 zsh neovim && \
     apt-get -qq clean && rm -rf /var/lib/apt/lists/* && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen && \
     mkdir -p /var/run/sshd
