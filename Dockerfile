@@ -83,8 +83,6 @@ RUN jupyter server extension enable --sys-prefix jupyter_server_proxy
 USER $NB_UID
 EXPOSE 8888
 ENV JUPYTER_ENABLE_LAB=1 \
-    JUPYTERHUB_SINGLEUSER_APP='jupyter_server.serverapp.ServerApp' \
-    SHELL="/bin/zsh" \
-    TERM="xterm-256color"
+    JUPYTERHUB_SINGLEUSER_APP='jupyter_server.serverapp.ServerApp'
 ENTRYPOINT ["tini", "-g", "--"]
 CMD ["start-notebook.sh"]
