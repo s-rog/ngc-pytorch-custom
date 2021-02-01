@@ -73,11 +73,6 @@ RUN pip list --format=freeze | grep tensorboard | xargs pip uninstall -yq && \
         tensorboard shapely aquirdturtle_collapsible_headings JLDracula && \
     pip uninstall -yq pillow pillow-simd && pip install -Uq --no-cache-dir pillow-simd
 
-EXPOSE 8888
-ENV JUPYTER_ENABLE_LAB=1
-ENTRYPOINT ["tini", "-g", "--"]
-CMD ["start-notebook.sh"]
-
 COPY --from=0 /usr/local/bin/start.sh /usr/local/bin/start.sh
 COPY --from=0 /usr/local/bin/start-notebook.sh /usr/local/bin/start-notebook.sh
 COPY --from=0 /usr/local/bin/start-singleuser.sh /usr/local/bin/start-singleuser.sh
@@ -85,7 +80,12 @@ COPY --from=0 /etc/jupyter/jupyter_notebook_config.py /etc/jupyter/jupyter_noteb
 
 USER root
 RUN fix-permissions $CONDA_DIR && fix-permissions /home/$NB_USER && fix-permissions /etc/jupyter/
-ENV JUPYTERHUB_SINGLEUSER_APP='jupyter_server.serverapp.ServerApp'
-ENV SHELL="/bin/zsh" TERM="xterm-256color"
 RUN jupyter server extension enable --sys-prefix jupyter_server_proxy
 USER $NB_UID
+EXPOSE 8888
+ENV JUPYTER_ENABLE_LAB=1 \
+    JUPYTERHUB_SINGLEUSER_APP='jupyter_server.serverapp.ServerApp' \
+    SHELL="/bin/zsh" \
+    TERM="xterm-256color"
+ENTRYPOINT ["tini", "-g", "--"]
+CMD ["start-notebook.sh"]
