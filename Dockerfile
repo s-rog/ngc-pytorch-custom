@@ -1,10 +1,6 @@
 FROM jupyter/base-notebook:latest
 FROM nvcr.io/nvidia/pytorch:20.12-py3
 
-ARG NB_USER="jovyan"
-ARG NB_UID="1000"
-ARG NB_GID="100"
-
 USER root
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get -qq update && apt-get -qq dist-upgrade && \
@@ -15,6 +11,9 @@ RUN apt-get -qq update && apt-get -qq dist-upgrade && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen && \
     mkdir -p /var/run/sshd
 
+ARG NB_USER="jovyan"
+ARG NB_UID="1000"
+ARG NB_GID="100"
 ENV CONDA_DIR=/opt/conda \
     SHELL=/bin/bash \
     NB_USER=$NB_USER \
