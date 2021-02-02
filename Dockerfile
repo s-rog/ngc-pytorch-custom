@@ -46,7 +46,7 @@ RUN mkdir /home/$NB_USER/work && \
 
 USER root
 RUN conda update --all -yq -c conda-forge && \
-    conda install --quiet -y -c conda-forge notebook jupyterhub jupyterlab nodejs tini=0.18.0 && \
+    conda install --quiet -y -c conda-forge notebook jupyterhub jupyterlab nodejs tini=0.18.0 gdcm && \
     conda list tini | grep tini | tr -s ' ' | cut -d ' ' -f 1,2 >> $CONDA_DIR/conda-meta/pinned && \
     conda clean --all -f -y && \
     npm cache clean --force && \
@@ -55,37 +55,28 @@ RUN conda update --all -yq -c conda-forge && \
     rm -rf /home/$NB_USER/.cache/yarn && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
-
 RUN jupyter labextension uninstall jupyterlab_tensorboard jupyterlab-jupytext && \
     jupyter lab clean && \
     sed -in '/jupyter_tensorboard/ d' /opt/conda/etc/jupyter/jupyter_notebook_config.json
-RUN conda install --quiet -y -c conda-forge \
-        jupytext ipywidgets black yapf isort jupyterlab_code_formatter jupyterlab-lsp jedi-language-server=0.21.0 \
-        jupyter-server-proxy  gdcm && \
-    conda clean --all -f -y && \
-    fix-permissions $CONDA_DIR && \
-    fix-permissions /home/$NB_USER
-RUN wget -q "https://github.com/sharkdp/vivid/releases/download/v0.6.0/vivid_0.6.0_amd64.deb" && \
-    dpkg -i vivid_0.6.0_amd64.deb && \
-    rm -f vivid_0.6.0_amd64.deb
+
 USER $NB_UID
+COPY requirements.txt $HOME
 RUN pip list --format=freeze | grep tensorboard | xargs pip uninstall -yq && \
-    pip install -Uq --no-cache-dir \
-        pandas tqdm scipy scikit-learn numpy opencv-python matplotlib pydicom pyarrow h5py colorama rasterio \
-        tensorboard shapely aquirdturtle_collapsible_headings JLDracula && \
-    pip uninstall -yq pillow pillow-simd && pip install -Uq --no-cache-dir pillow-simd
+    pip install -Uq --no-cache-dir -r requirements.txt && \
+    pip uninstall -yq pillow pillow-simd && pip install -Uq --no-cache-dir pillow-simd && \
+    rm -f requirements.txt
+USER root
+RUN jupyter server extension enable --sys-prefix jupyter_server_proxy
 
 COPY --from=0 /usr/local/bin/start.sh /usr/local/bin/start.sh
 COPY --from=0 /usr/local/bin/start-notebook.sh /usr/local/bin/start-notebook.sh
 COPY --from=0 /usr/local/bin/start-singleuser.sh /usr/local/bin/start-singleuser.sh
 COPY --from=0 /etc/jupyter/jupyter_notebook_config.py /etc/jupyter/jupyter_notebook_config.py
 
-USER root
 RUN fix-permissions $CONDA_DIR && fix-permissions /home/$NB_USER && fix-permissions /etc/jupyter/
-RUN jupyter server extension enable --sys-prefix jupyter_server_proxy
-USER $NB_UID
 EXPOSE 8888
 ENV JUPYTER_ENABLE_LAB=1 \
     JUPYTERHUB_SINGLEUSER_APP='jupyter_server.serverapp.ServerApp'
 ENTRYPOINT ["tini", "-g", "--"]
 CMD ["start-notebook.sh"]
+USER $NB_UID
