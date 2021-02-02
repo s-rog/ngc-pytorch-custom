@@ -67,6 +67,9 @@ RUN pip list --format=freeze | grep tensorboard | xargs pip uninstall -yq && \
     rm -f requirements.txt
 USER root
 RUN jupyter server extension enable --sys-prefix jupyter_server_proxy
+RUN wget -q "https://github.com/sharkdp/vivid/releases/download/v0.6.0/vivid_0.6.0_amd64.deb" && \
+    dpkg -i vivid_0.6.0_amd64.deb && \
+    rm -f vivid_0.6.0_amd64.deb
 
 COPY --from=0 /usr/local/bin/start.sh /usr/local/bin/start.sh
 COPY --from=0 /usr/local/bin/start-notebook.sh /usr/local/bin/start-notebook.sh
