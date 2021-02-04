@@ -80,7 +80,7 @@ COPY --from=0 /etc/jupyter/jupyter_notebook_config.py /etc/jupyter/
 RUN fix-permissions $CONDA_DIR && fix-permissions /home/$NB_USER && fix-permissions /etc/jupyter/
 ENV JUPYTER_ENABLE_LAB=1 \
     JUPYTERHUB_SINGLEUSER_APP='jupyter_server.serverapp.ServerApp' \
-    SHELL="/bin/zsh"
+    SHELL="/bin/zsh" TERM="xterm-256color"
 ENTRYPOINT ["tini", "-g", "--"]
 CMD ["start-notebook.sh"]
 EXPOSE 8888
