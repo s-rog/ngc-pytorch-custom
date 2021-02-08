@@ -1,8 +1,8 @@
-# Jupyter Extensions
+# Jupyter/IPython Extensions
 aquirdturtle_collapsible_headings
 ipympl
 ipywidgets
-jedi-language-server==0.21.0
+jedi-language-server
 JLDracula
 jupyterlab_code_formatter
 jupyterlab-lsp

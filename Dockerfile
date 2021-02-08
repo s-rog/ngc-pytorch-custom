@@ -3,10 +3,12 @@ FROM nvcr.io/nvidia/pytorch:20.12-py3
 
 USER root
 ENV DEBIAN_FRONTEND noninteractive
+RUN echo 'deb http://download.opensuse.org/repositories/home:/Provessor/xUbuntu_20.04/ /' >> /etc/apt/sources.list.d/home:Provessor.list && \
+    wget -qO - https://download.opensuse.org/repositories/home:Provessor/xUbuntu_20.04/Release.key | apt-key add -
 RUN apt-get -qq update && apt-get -qq dist-upgrade &&\
     apt-get -qq install --no-install-recommends \
         wget bzip2 ca-certificates sudo locales fonts-liberation run-one \
-        nvtop htop openssh-server net-tools ffmpeg libsm6 libxext6 zsh neovim &&\
+        nvtop htop openssh-server net-tools ffmpeg libsm6 libxext6 zsh neovim lf &&\
     apt-get -qq clean && rm -rf /var/lib/apt/lists/*
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen &&\
     mkdir -p /var/run/sshd &&\
