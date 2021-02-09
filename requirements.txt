@@ -18,7 +18,7 @@ black
 isort
 yapf
 
-# Python Packages
+# PyPI Packages
 colorama
 h5py
 matplotlib
@@ -33,4 +33,6 @@ scipy
 shapely
 tensorboard
 tqdm
+
+# Git Packages
 git+https://github.com/smutch/h5dir.git
