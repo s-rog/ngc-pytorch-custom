@@ -1,14 +1,17 @@
 # Jupyter/IPython Extensions
 aquirdturtle_collapsible_headings
 ipympl
+ipyplot
 ipywidgets
 jedi-language-server
-JLDracula
 jupyterlab_code_formatter
 jupyterlab-lsp
 jupyter-server-proxy
 jupytext
 sidecar
+
+# Jupyter Themes
+JLDracula
 
 # Formatters
 black
