@@ -1,16 +1,16 @@
-FROM jupyter/base-notebook:latest
 FROM nvcr.io/nvidia/pytorch:20.12-py3
 
 USER root
 ARG DEBIAN_FRONTEND=noninteractive nb_user=jovyan lang=en_US.UTF-8 \
-    cd=/opt/conda ulb=/usr/local/bin etcj=/etc/jupyter
+    cd=/opt/conda ulb=/usr/local/bin etcj=/etc/jupyter \
+    jupyter_git=https://raw.githubusercontent.com/jupyter/docker-stacks/master/base-notebook
 
 RUN lf_repo="http://download.opensuse.org/repositories/home:/Provessor/xUbuntu_20.04" \
  && echo "deb $lf_repo/ /" >> /etc/apt/sources.list.d/home:Provessor.list \
  && wget -qO - $lf_repo/Release.key | apt-key add -
 RUN apt-get -qq update && apt-get -qq dist-upgrade \
  && apt-get -qq install --no-install-recommends \
-    wget ca-certificates sudo locales fonts-liberation run-one \
+    ca-certificates sudo locales fonts-liberation run-one \
     nvtop htop openssh-server net-tools ffmpeg libsm6 libxext6 \
     zsh neovim lf bat fd-find \
  && apt-get -qq clean && rm -rf /var/lib/apt/lists/*
@@ -21,8 +21,12 @@ RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen \
 
 ENV CONDA_DIR=$cd LANG=$lang LANGUAGE=$lang LC_ALL=$lang \
     NB_USER=$nb_user NB_UID=1000 NB_GID=100 HOME=/home/$nb_user
-COPY --from=0 $ulb/fix-permissions $ulb/
-RUN chmod a+rx $ulb/fix-permissions
+RUN wget -q $jupyter_git/fix-permissions -P $ulb \
+ && wget -q $jupyter_git/start.sh -P $ulb \
+ && wget -q $jupyter_git/start-notebook.sh -P $ulb \
+ && wget -q $jupyter_git/start-singleuser.sh -P $ulb \
+ && wget -q $jupyter_git/jupyter_notebook_config.py -P $etcj \
+ && chmod a+rx $ulb/fix-permissions $ulb/start.sh $ulb/start-notebook.sh $ulb/start-singleuser.sh
 RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su \
  && sed -i.bak -e 's/^%admin/#%admin/' /etc/sudoers \
  && sed -i.bak -e 's/^%sudo/#%sudo/' /etc/sudoers \
@@ -59,8 +63,6 @@ RUN ver=0.6.0 && deb=vivid_$ver\_amd64.deb \
  && wget -q "https://github.com/sharkdp/vivid/releases/download/v$ver/$deb" \
  && dpkg -i $deb && rm -f $deb
 
-COPY --from=0 $ulb/start.sh $ulb/start-notebook.sh $ulb/start-singleuser.sh $ulb/
-COPY --from=0 $etcj/jupyter_notebook_config.py $etcj/
 RUN sed -re "s/c.NotebookApp/c.ServerApp/g" \
     $etcj/jupyter_notebook_config.py > $etcj/jupyter_server_config.py
 RUN fix-permissions $cd $HOME $etcj
