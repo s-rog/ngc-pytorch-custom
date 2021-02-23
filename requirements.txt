@@ -19,20 +19,16 @@ isort
 yapf
 
 # PyPI Packages
-colorama
 h5py
 matplotlib
-numpy
 opencv-python
 pandas
 pyarrow
 pydicom
 rasterio
 scikit-learn
-scipy
 shapely
 tensorboard
-tqdm
 
 # Git Packages
 git+https://github.com/smutch/h5dir.git
