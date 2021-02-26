@@ -19,6 +19,7 @@ isort
 yapf
 
 # PyPI Packages
+colorama
 h5py
 matplotlib
 opencv-python
