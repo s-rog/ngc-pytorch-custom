@@ -24,21 +24,22 @@ RUN ver=0.6.0 && deb=vivid_$ver\_amd64.deb \
 # user and other setup
 ENV CONDA_DIR=$cd LANG=$lang LANGUAGE=$lang LC_ALL=$lang \
     NB_USER=jovyan NB_UID=1000 NB_GID=100 HOME=/home/jovyan
+WORKDIR $ulb
 RUN url=https://raw.githubusercontent.com/jupyter/docker-stacks/master/base-notebook \
- && wget -q $url/fix-permissions -P $ulb \
- && wget -q $url/start.sh -P $ulb \
- && wget -q $url/start-notebook.sh -P $ulb \
- && wget -q $url/start-singleuser.sh -P $ulb \
+ && wget -q $url/fix-permissions && wget -q $url/start.sh \
+ && wget -q $url/start-notebook.sh && wget -q $url/start-singleuser.sh \
  && wget -q $url/jupyter_notebook_config.py -P $etcj \
- && chmod a+rx $ulb/fix-permissions $ulb/start*.sh
+ && chmod a+rx fix-permissions start*.sh
 RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su \
  && sed -i.bak -e 's/^%admin/#%admin/' /etc/sudoers \
  && sed -i.bak -e 's/^%sudo/#%sudo/' /etc/sudoers \
  && useradd -m -s /bin/zsh -N -u $NB_UID $NB_USER \
  && chown $NB_USER:$NB_GID $cd && chmod g+w /etc/passwd && fix-permissions $HOME
+WORKDIR $HOME
 # conda
 RUN conda update --all -yq && conda install -yqc conda-forge \
- tini=0.18.0 notebook=6.2.0 jupyterhub=1.3.0 jupyterlab=3.0.9 nodejs=15.10.0 gdcm \
+ tini=0.18.0 notebook=6.2.0 jupyterhub=1.3.0 jupyterlab=3.0.9 nodejs=15.10.0 \
+ gdcm mamba \
  && conda list tini | grep tini | tr -s ' ' | cut -d ' ' -f 1,2 >> $cd/conda-meta/pinned \
  && conda clean --all -yf \
  && jupyter labextension uninstall jupyterlab_tensorboard jupyterlab-jupytext \
@@ -59,4 +60,3 @@ ENTRYPOINT ["tini", "-g", "--"]
 CMD ["start-notebook.sh"]
 EXPOSE 8888
 USER $NB_UID
-WORKDIR $HOME
