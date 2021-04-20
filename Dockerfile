@@ -1,4 +1,4 @@
-FROM nvcr.io/nvidia/pytorch:21.02-py3
+FROM nvcr.io/nvidia/pytorch:21.03-py3
 ARG lang=en_US.UTF-8 cd=/opt/conda ulb=/usr/local/bin etcj=/etc/jupyter
 # clean ngc image
 RUN pip list --format=freeze | grep 'tensorboard\|jupy\|^nb' \
@@ -23,7 +23,8 @@ RUN ver=0.6.0 && deb=vivid_$ver\_amd64.deb \
  && dpkg -i $deb && rm -f $deb
 # user and other setup
 ENV CONDA_DIR=$cd LANG=$lang LANGUAGE=$lang LC_ALL=$lang \
-    NB_USER=jovyan NB_UID=1000 NB_GID=100 HOME=/home/jovyan
+    NB_USER=jovyan NB_UID=1000 NB_GID=100 HOME=/home/jovyan \
+    PATH=$HOME/.local/bin:$PATH
 WORKDIR $ulb
 RUN url=https://raw.githubusercontent.com/jupyter/docker-stacks/master/base-notebook \
  && wget -q $url/fix-permissions && wget -q $url/start.sh \
@@ -33,13 +34,12 @@ RUN url=https://raw.githubusercontent.com/jupyter/docker-stacks/master/base-note
 RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su \
  && sed -i.bak -e 's/^%admin/#%admin/' /etc/sudoers \
  && sed -i.bak -e 's/^%sudo/#%sudo/' /etc/sudoers \
- && useradd -m -s /bin/zsh -N -u $NB_UID $NB_USER \
+ && useradd -l -m -s /bin/zsh -N -u $NB_UID $NB_USER \
  && chown $NB_USER:$NB_GID $cd && chmod g+w /etc/passwd && fix-permissions $HOME
 WORKDIR $HOME
 # conda
 RUN conda update --all -yq && conda install -yqc conda-forge \
- tini=0.18.0 notebook=6.2.0 jupyterhub=1.3.0 jupyterlab=3.0.9 nodejs=15.10.0 \
- gdcm mamba \
+    tini=0.18.0 notebook=6.3.0 jupyterhub=1.3.0 jupyterlab=3.0.14 nodejs=15.14.0 gdcm \
  && conda list tini | grep tini | tr -s ' ' | cut -d ' ' -f 1,2 >> $cd/conda-meta/pinned \
  && conda clean --all -yf \
  && jupyter labextension uninstall jupyterlab_tensorboard jupyterlab-jupytext \
@@ -48,7 +48,6 @@ RUN conda update --all -yq && conda install -yqc conda-forge \
 # pip
 COPY requirements.txt .
 RUN pip install --no-cache-dir -Uqr requirements.txt && rm -f requirements.txt \
- && pip uninstall -yq pillow pillow-simd && pip install --no-cache-dir -Uq pillow-simd \
  && jupyter server extension enable --sys-prefix jupyter_server_proxy
 # finalize
 RUN sed -re "s/c.NotebookApp/c.ServerApp/g" \

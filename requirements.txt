@@ -5,6 +5,7 @@ ipyplot
 ipywidgets
 jedi-language-server
 jupyterlab_code_formatter
+jupyterlab_execute_time
 jupyterlab-lsp
 jupyter-server-proxy
 jupytext
@@ -12,6 +13,7 @@ sidecar
 
 # Jupyter Themes
 JLDracula
+jupyterlab-horizon-theme
 
 # Formatters
 black
