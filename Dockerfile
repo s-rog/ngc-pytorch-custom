@@ -1,16 +1,13 @@
-FROM nvcr.io/nvidia/pytorch:21.03-py3
+FROM nvcr.io/nvidia/pytorch:21.04-py3
 ARG lang=en_US.UTF-8 cd=/opt/conda ulb=/usr/local/bin etcj=/etc/jupyter
 # clean ngc image
 RUN pip list --format=freeze | grep 'tensorboard\|jupy\|^nb' \
   | xargs pip uninstall -yq notebook \
  && sed -in '/jupyter_tensorboard/ d' $cd$etcj/jupyter_notebook_config.json
 # apt
-RUN url=http://download.opensuse.org/repositories/home:/Provessor/xUbuntu_20.04 \
- && echo "deb $url/ /" >> /etc/apt/sources.list.d/home:Provessor.list \
- && wget -qO - $url/Release.key | apt-key add -
 RUN export DEBIAN_FRONTEND=noninteractive && apt-get -qq update \
  && apt-get -qq dist-upgrade && apt-get -qq install --no-install-recommends \
-    sudo locales fonts-liberation run-one zsh neovim lf bat fd-find \
+    sudo locales fonts-liberation run-one zsh neovim bat fd-find \
     nvtop htop openssh-server net-tools ffmpeg libsm6 libxext6 \
  && apt-get -qq clean && rm -rf /var/lib/apt/lists/* \
  && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen \

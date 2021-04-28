@@ -3,7 +3,6 @@ aquirdturtle_collapsible_headings
 ipympl
 ipyplot
 ipywidgets
-jedi-language-server
 jupyterlab_code_formatter
 jupyterlab_execute_time
 jupyterlab-lsp
@@ -15,9 +14,11 @@ sidecar
 JLDracula
 jupyterlab-horizon-theme
 
-# Formatters
+# Formatters, linters, etc.
 black
 isort
+rope
+python-lsp-server
 yapf
 
 # PyPI Packages
@@ -25,6 +26,7 @@ colorama
 h5py
 matplotlib
 opencv-python
+openpyxl
 pandas
 pyarrow
 pydicom
