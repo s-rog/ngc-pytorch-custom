@@ -6,7 +6,6 @@ ipywidgets
 jupyterlab_code_formatter
 jupyterlab_execute_time
 jupyterlab-lsp
-jupyter-server-proxy
 jupytext
 sidecar
 
@@ -24,6 +23,7 @@ yapf
 # PyPI Packages
 colorama
 h5py
+imagecodecs
 matplotlib
 opencv-python
 openpyxl
@@ -34,6 +34,7 @@ rasterio
 scikit-learn
 shapely
 tensorboard
+tifffile
 
 # Git Packages
 git+https://github.com/smutch/h5dir.git
