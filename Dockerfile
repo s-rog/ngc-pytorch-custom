@@ -47,7 +47,7 @@ RUN conda update --all -yq && conda install -yqc conda-forge \
  && jupyter notebook --generate-config && jupyter lab clean \
  && npm cache clean --force && rm -rf $HOME/.cache/yarn
 # pip
-RUN pip install --no-cache-dir -Uqr jupyter-server-proxy \
+RUN pip install --no-cache-dir -Uq jupyter-server-proxy \
  && jupyter server extension enable --sys-prefix jupyter_server_proxy
 COPY requirements.txt .
 RUN pip install --no-cache-dir -Uqr requirements.txt && rm -f requirements.txt
