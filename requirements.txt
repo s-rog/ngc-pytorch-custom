@@ -12,6 +12,7 @@ sidecar
 # Jupyter Themes
 JLDracula
 jupyterlab-horizon-theme
+theme-darcula
 
 # Formatters, linters, etc.
 black
