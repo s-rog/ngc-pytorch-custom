@@ -40,7 +40,7 @@ RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su \
 WORKDIR $HOME
 # conda
 RUN conda update --all -yq && conda install -yqc conda-forge \
-    tini=0.18.0 notebook=6.3.0 jupyterhub=1.3.0 jupyterlab=3.0.14 nodejs=15.14.0 gdcm \
+    tini=0.18.0 notebook=6.3.0 jupyterhub=1.4.0 jupyterlab=3.0.14 nodejs=15.14.0 gdcm \
  && conda list tini | grep tini | tr -s ' ' | cut -d ' ' -f 1,2 >> $cd/conda-meta/pinned \
  && conda clean --all -yf \
  && jupyter labextension uninstall jupyterlab_tensorboard jupyterlab-jupytext \
