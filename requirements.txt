@@ -17,8 +17,7 @@ theme-darcula
 # Formatters, linters, etc.
 black
 isort
-rope
-python-lsp-server
+python-lsp-server[all]
 yapf
 
 # PyPI Packages

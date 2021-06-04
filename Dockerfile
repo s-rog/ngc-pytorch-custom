@@ -7,9 +7,9 @@ RUN pip list --format=freeze | grep 'tensorboard\|jupy\|^nb' \
 # apt
 RUN export DEBIAN_FRONTEND=noninteractive && apt-get -qq update \
  && apt-get -qq dist-upgrade && apt-get -qq install --no-install-recommends \
-    sudo locales fonts-liberation run-one zsh neovim bat fd-find htop \
-    openssh-server net-tools ffmpeg libsm6 libxext6 \
-    cmake libncurses5-dev libncursesw5-dev \
+    sudo locales fonts-liberation run-one tini openssh-server net-tools \
+    zsh neovim bat fd-find htop cmake libncurses5-dev libncursesw5-dev \
+    ffmpeg libsm6 libxext6 \
  && apt-get -qq clean && rm -rf /var/lib/apt/lists/* \
  && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen \
  && ln -fs /usr/share/zoneinfo/Asia/Taipei /etc/localtime \
@@ -40,8 +40,7 @@ RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su \
 WORKDIR $HOME
 # conda
 RUN conda update --all -yq && conda install -yqc conda-forge \
-    tini=0.18.0 notebook=6.3.0 jupyterhub=1.4.1 jupyterlab=3.0.15 nodejs=15.14.0 gdcm \
- && conda list tini | grep tini | tr -s ' ' | cut -d ' ' -f 1,2 >> $cd/conda-meta/pinned \
+    notebook=6.4.0 jupyterhub=1.4.1 jupyterlab=3.0.16 nodejs=15.14.0 gdcm \
  && conda clean --all -yf \
  && jupyter labextension uninstall jupyterlab_tensorboard jupyterlab-jupytext \
  && jupyter notebook --generate-config && jupyter lab clean \
