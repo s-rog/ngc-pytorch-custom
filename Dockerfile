@@ -16,7 +16,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && apt-get -qq update \
  && dpkg-reconfigure -f noninteractive tzdata \
  && mkdir -p /var/run/sshd
 # dpkg
-RUN ver=0.6.0 && deb=vivid_$ver\_amd64.deb \
+RUN ver=0.7.0 && deb=vivid_$ver\_amd64.deb \
  && wget -q https://github.com/sharkdp/vivid/releases/download/v$ver/$deb \
  && dpkg -i $deb && rm -f $deb
 # nvtop
