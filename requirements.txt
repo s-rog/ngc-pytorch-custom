@@ -28,9 +28,12 @@ matplotlib
 opencv-python
 openpyxl
 pandas
+poetry
 pyarrow
+pydantic
 pydicom
 rasterio
+rich
 scikit-learn
 shapely
 tensorboard
