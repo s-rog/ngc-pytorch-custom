@@ -37,8 +37,8 @@ RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su \
  && sed -i.bak -e 's/^%sudo/#%sudo/' /etc/sudoers \
  && useradd -l -m -s /bin/zsh -N -u $NB_UID $NB_USER \
  && chown $NB_USER:$NB_GID $cd && chmod g+w /etc/passwd && fix-permissions $HOME
-WORKDIR $HOME
 # conda
+WORKDIR $HOME
 RUN conda update --all -yq && conda install -yqc conda-forge \
     notebook=6.4.0 jupyterhub=1.4.1 jupyterlab=3.0.16 nodejs=15.14.0 gdcm \
  && conda clean --all -yf \
