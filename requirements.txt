@@ -29,7 +29,6 @@ opencv-python
 openpyxl
 pandas
 pipx
-pydantic
 pydicom
 scikit-learn
 tensorboard
