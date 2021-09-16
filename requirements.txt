@@ -30,6 +30,7 @@ openpyxl
 pandas
 pipx
 pydicom
+rich
 scikit-learn
 tensorboard
 
