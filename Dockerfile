@@ -1,4 +1,4 @@
-FROM nvcr.io/nvidia/pytorch:21.07-py3
+FROM nvcr.io/nvidia/pytorch:21.09-py3
 ARG lang=en_US.UTF-8 cd=/opt/conda ulb=/usr/local/bin etcj=/etc/jupyter
 # clean ngc image
 RUN pip list --format=freeze | grep 'tensorboard\|jupy\|^nb' \
