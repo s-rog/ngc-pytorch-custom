@@ -32,6 +32,7 @@ pipx
 pydicom
 rich
 scikit-learn
+scikit-learn-intelex
 tensorboard
 
 # Git Packages
