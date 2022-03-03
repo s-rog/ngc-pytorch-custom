@@ -24,7 +24,8 @@ RUN git clone https://github.com/Syllo/nvtop.git && mkdir -p nvtop/build \
  && cd nvtop/build && cmake .. && make && make install && rm -rf nvtop
 # btop
 RUN wget -q https://github.com/aristocratos/btop/releases/download/v1.2.4/btop-x86_64-linux-musl.tbz \
- && tar -xjf btop-x86_64-linux-musl.tbz -C btop && cd btop && ./install.sh && ./setuid.sh
+ && mkdir btop && tar -xjf btop-x86_64-linux-musl.tbz -C btop && cd btop \
+ && ./install.sh && ./setuid.sh && rm -rf btop
 # user and other setup
 ENV CONDA_DIR=$cd LANG=$lang LANGUAGE=$lang LC_ALL=$lang \
     NB_USER=jovyan NB_UID=1000 NB_GID=100 HOME=/home/jovyan \
