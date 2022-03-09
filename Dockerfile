@@ -1,4 +1,4 @@
-FROM nvcr.io/nvidia/pytorch:21.11-py3
+FROM nvcr.io/nvidia/pytorch:22.02-py3
 ARG lang=en_US.UTF-8 cd=/opt/conda ulb=/usr/local/bin etcj=/etc/jupyter
 # clean ngc image
 RUN pip list --format=freeze | grep 'tensorboard\|jupy\|^nb' \
@@ -23,7 +23,7 @@ RUN ver=0.7.0 && deb=vivid_$ver\_amd64.deb \
 RUN git clone https://github.com/Syllo/nvtop.git && mkdir -p nvtop/build \
  && cd nvtop/build && cmake .. && make && make install && rm -rf nvtop
 # btop
-RUN wget -q https://github.com/aristocratos/btop/releases/download/v1.2.4/btop-x86_64-linux-musl.tbz \
+RUN wget -q https://github.com/aristocratos/btop/releases/download/v1.2.5/btop-x86_64-linux-musl.tbz \
  && mkdir btop && tar -xjf btop-x86_64-linux-musl.tbz -C btop && cd btop \
  && ./install.sh && ./setuid.sh && rm -rf btop
 # user and other setup
@@ -34,7 +34,7 @@ WORKDIR $ulb
 RUN url=https://raw.githubusercontent.com/jupyter/docker-stacks/master/base-notebook \
  && wget -q $url/fix-permissions && wget -q $url/start.sh \
  && wget -q $url/start-notebook.sh && wget -q $url/start-singleuser.sh \
- && wget -q $url/jupyter_notebook_config.py -P $etcj \
+ && wget -q $url/jupyter_server_config.py -P $etcj \
  && chmod a+rx fix-permissions start*.sh
 RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su \
  && sed -i.bak -e 's/^%admin/#%admin/' /etc/sudoers \
@@ -55,8 +55,8 @@ RUN pip install --no-cache-dir -Uq jupyter-server-proxy \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -Uqr requirements.txt && rm -f requirements.txt
 # finalize
-RUN sed -re "s/c.NotebookApp/c.ServerApp/g" \
-    $etcj/jupyter_notebook_config.py > $etcj/jupyter_server_config.py \
+RUN sed -re "s/c.ServerApp/c.NotebookApp/g" \
+    /etc/jupyter/jupyter_server_config.py > /etc/jupyter/jupyter_notebook_config.py \    
  && fix-permissions $HOME $etcj
 ENV SHELL=/bin/zsh TERM=xterm-256color JUPYTER_ENABLE_LAB=1 \
     JUPYTERHUB_SINGLEUSER_APP=jupyter_server.serverapp.ServerApp
